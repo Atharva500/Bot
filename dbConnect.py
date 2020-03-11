@@ -8,6 +8,7 @@ sql_transanction = []
 connection = sqlite3.connect('{}.db'.format(timeframe))
 c = connection.cursor()
 
+# Query to Create MySQL Database
 def createTable():
     c.execute("""CREATE TABLE IF NOT EXISTS reddit_comments (parent_id TEXT PRIMARY KEY, comment_id TEXT UNIQUE,
                 parent TEXT,comment TEXT,subreddit TEXT, unix INT, score INT) """)
@@ -29,6 +30,7 @@ def find_parent(id):
         # print("Find parent",e)
         return False
 
+# Compute a score for each comment
 def find_comment_score(id):
     try:
         sql = "SELECT score FROM reddit_comments WHERE parent_id='{}' LIMIT ".format(id)
@@ -42,6 +44,7 @@ def find_comment_score(id):
         # print("Find parent",e)
         return False
 
+# Define criteria to filter comments
 def acceptable(data):
     if len(data.split(' '))>50 or len(data.split(' '))<1:
         return False
@@ -52,6 +55,7 @@ def acceptable(data):
     else:
         return True
 
+# Insert and replace queries
 def insert_replace_comment(commentid,parentid,parent,comment,subreddit,time,score):
     try:
         sql="""UPDATE reddit_comments SET parent_id=?, comment_id=?, parent=? , comment=?, subreddit=?, unix=?, score=? WHERE parent_id=?;""".format(parentid,commentid,parent,comment,subreddit,int(time),score,parentid)
