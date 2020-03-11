@@ -2,7 +2,7 @@ import sqlite3
 import pandas as pd
 
 timeframes = ['2015-01']
-
+# Create To and From Files
 for timeframe in timeframes:
     connection = sqlite3.connect('{}.db'.format(timeframe))
     c = connection.cursor()
